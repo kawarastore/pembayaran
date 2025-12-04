@@ -64,30 +64,6 @@
             position: relative;
         }
 
-        .back-btn {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            transition: var(--transition);
-            padding: 10px 20px;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-50%) translateX(-5px);
-        }
-
         header h1 {
             font-size: 2.8rem;
             margin: 0;
@@ -571,13 +547,6 @@
                 font-size: 2.2rem;
             }
             
-            .back-btn {
-                position: static;
-                transform: none;
-                margin-bottom: 20px;
-                display: inline-flex;
-            }
-            
             .payment-grid,
             .payment-methods {
                 grid-template-columns: 1fr;
@@ -599,12 +568,8 @@
 
     <div class="container">
         <header>
-            <a href="javascript:history.back()" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </a>
-            
             <h1><i class="fas fa-credit-card"></i> METODE PEMBAYARAN</h1>
-            <p class="store-name">Kawara Store - Layanan Gaming Terpercaya</p>
+            <p class="store-name">Kawara Store - Layanan Topup Terpercaya</p>
             <div class="owner-name">
                 <i class="fas fa-user-circle"></i> Atas Nama: Muhammad Khaliji Raihan
             </div>
@@ -786,7 +751,6 @@
                 <ul>
                     <li>Pastikan Anda melakukan transfer ke nomor/nomor rekening yang tercantum di atas</li>
                     <li>Setelah melakukan pembayaran, segera konfirmasi ke admin dengan menyertakan bukti transfer</li>
-                    <li>Pembayaran di luar jam 21.00 WIB akan diproses keesokan harinya</li>
                     <li>Transaksi yang sudah dibayar tidak dapat dibatalkan</li>
                     <li>Untuk pembayaran via QRIS, pastikan Anda memasukkan nominal yang benar</li>
                 </ul>
