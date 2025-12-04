@@ -1,94 +1,886 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Kawara Store - Pembayaran</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kawara Store - Metode Pembayaran</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5c7bff;
+            --secondary: #a24bff;
+            --accent: #ffdf5c;
+            --dark-bg: #0b0c0f;
+            --dark-card: #14161c;
+            --text-light: rgba(255, 255, 255, 0.85);
+            --transition: all 0.3s ease;
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            --success: #25D366;
+            --warning: #ffdf5c;
+            --danger: #ff5c8d;
+        }
 
-<style>
-    body {
-        margin: 0;
-        font-family: "Poppins", sans-serif;
-        background: #0b0c0f;
-        color: #ffffff;
-        padding: 30px;
-        text-align: center;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    h1 {
-        font-size: 36px;
-        margin-bottom: 10px;
-        font-weight: 800;
-        color: #9db3ff;
-    }
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #0f1117 0%, #181b25 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    h3 {
-        color: #b8c7ff;
-        margin-top: 0;
-        font-weight: 500;
-    }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(92, 123, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(162, 75, 255, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
 
-    .pay-box {
-        background: #14161c;
-        padding: 25px;
-        border-radius: 16px;
-        width: 90%;
-        max-width: 480px;
-        margin: auto;
-        box-shadow: 0 0 20px rgba(0,0,0,0.45);
-        border: 1px solid rgba(255,255,255,0.07);
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
 
-    .pay-box p {
-        margin: 12px 0;
-        font-size: 18px;
-        line-height: 1.6;
-    }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
 
-    .qris-box {
-        margin-top: 25px;
-        background: #1a1c22;
-        padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .qris-box img {
-        width: 220px;
-        border-radius: 12px;
-        margin-top: 15px;
-        box-shadow: 0 0 15px rgba(255,255,255,0.1);
-    }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) translateX(-5px);
+        }
 
-    b {
-        color: #b8c7ff;
-    }
-</style>
+        header h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
 
+        .store-name {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+            color: var(--text-light);
+        }
+
+        .owner-name {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, rgba(92, 123, 255, 0.2), rgba(162, 75, 255, 0.2));
+            border: 1px solid rgba(92, 123, 255, 0.3);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #9db3ff;
+        }
+
+        /* Payment Methods Grid */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .payment-card {
+            background: rgba(20, 22, 28, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(92, 123, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .payment-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .payment-details h3 {
+            margin: 0 0 5px;
+            font-size: 1.4rem;
+            color: #fff;
+        }
+
+        .payment-type {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            opacity: 0.8;
+        }
+
+        .payment-number {
+            background: rgba(30, 32, 38, 0.8);
+            border-radius: 10px;
+            padding: 18px;
+            margin-top: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 1px;
+            color: var(--accent);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Courier New', monospace;
+        }
+
+        .payment-number:hover {
+            background: rgba(40, 42, 48, 0.9);
+            border-color: rgba(92, 123, 255, 0.3);
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(92, 123, 255, 0.2);
+            border: none;
+            color: var(--primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .copy-success {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .copy-success.show {
+            opacity: 1;
+            top: -35px;
+        }
+
+        /* QRIS Section */
+        .qris-section {
+            background: rgba(20, 22, 28, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .qris-header {
+            margin-bottom: 25px;
+        }
+
+        .qris-header h2 {
+            font-size: 1.8rem;
+            color: #9db3ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .qris-header p {
+            color: var(--text-light);
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .qris-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .qris-image {
+            width: 280px;
+            height: 280px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            background: #fff;
+        }
+
+        .qris-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .qris-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .qris-image:hover .qris-overlay {
+            opacity: 1;
+        }
+
+        .qris-overlay p {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(92, 123, 255, 0.4);
+        }
+
+        .qris-instructions {
+            background: rgba(30, 32, 38, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .qris-instructions h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .qris-instructions ol {
+            text-align: left;
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .qris-instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: var(--text-light);
+        }
+
+        /* Payment Categories */
+        .payment-categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(92, 123, 255, 0.3);
+        }
+
+        /* Payment Methods Data */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .method-item {
+            background: rgba(20, 22, 28, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(92, 123, 255, 0.3);
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .method-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .method-details h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: #fff;
+        }
+
+        .method-number {
+            background: rgba(30, 32, 38, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--accent);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Courier New', monospace;
+        }
+
+        .method-number:hover {
+            background: rgba(40, 42, 48, 0.9);
+        }
+
+        .copy-btn-small {
+            background: rgba(92, 123, 255, 0.2);
+            border: none;
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-btn-small:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Important Notice */
+        .notice-box {
+            background: linear-gradient(135deg, rgba(255, 223, 92, 0.1), rgba(255, 193, 7, 0.1));
+            border: 1px solid rgba(255, 223, 92, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 40px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .notice-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .notice-content h3 {
+            color: var(--accent);
+            margin: 0 0 10px;
+            font-size: 1.4rem;
+        }
+
+        .notice-content ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .notice-content li {
+            margin-bottom: 8px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 40px 20px;
+            text-align: center;
+            opacity: 0.7;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            border-radius: 0 0 4px 4px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .back-btn {
+                position: static;
+                transform: none;
+                margin-bottom: 20px;
+                display: inline-flex;
+            }
+            
+            .payment-grid,
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .qris-image {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .category-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<h1>LIST PEMBAYARAN</h1>
-<h3>Atas Nama: <b>Muhammad Khaliji Raihan</b></h3>
+    <div class="container">
+        <header>
+            <a href="javascript:history.back()" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+            
+            <h1><i class="fas fa-credit-card"></i> METODE PEMBAYARAN</h1>
+            <p class="store-name">Kawara Store - Layanan Gaming Terpercaya</p>
+            <div class="owner-name">
+                <i class="fas fa-user-circle"></i> Atas Nama: Muhammad Khaliji Raihan
+            </div>
+        </header>
 
-<div class="pay-box">
+        <!-- Payment Categories -->
+        <div class="payment-categories">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-th-large"></i> Semua
+            </button>
+            <button class="category-btn" data-category="ewallet">
+                <i class="fas fa-wallet"></i> E-Wallet
+            </button>
+            <button class="category-btn" data-category="bank">
+                <i class="fas fa-university"></i> Bank
+            </button>
+            <button class="category-btn" data-category="qris">
+                <i class="fas fa-qrcode"></i> QRIS
+            </button>
+        </div>
 
-    <!-- E-WALLET -->
-    <p><b>DANA:</b> 087720254002</p>
-    <p><b>GOPAY:</b> 087720254002</p>
-    <p><b>OVO:</b> 087720254002</p>
-    <p><b>SHOPEEPAY:</b> 782087720254002</p>
-    <p><b>SEABANK:</b> 901537597035</p>
+        <!-- E-Wallet Payments -->
+        <div class="payment-grid" id="ewallet-payments">
+            <!-- DANA -->
+            <div class="payment-card" data-category="ewallet">
+                <div class="payment-header">
+                    <div class="payment-icon" style="background: linear-gradient(135deg, #00BFA6, #009688);">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="payment-details">
+                        <h3>DANA</h3>
+                        <div class="payment-type">E-Wallet</div>
+                    </div>
+                </div>
+                
+                <div class="payment-number" onclick="copyToClipboard('087720254002', this)">
+                    087720254002
+                    <button class="copy-btn">
+                        <i class="far fa-copy"></i>
+                    </button>
+                    <span class="copy-success">Nomor berhasil disalin!</span>
+                </div>
+                
+                <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-light); opacity: 0.8;">
+                    <i class="fas fa-info-circle"></i> Pastikan transfer atas nama Muhammad Khaliji Raihan
+                </div>
+            </div>
 
-    <!-- QRIS -->
-    <div class="qris-box">
-        <p><b>QRIS</b> (Scan untuk bayar)</p>
+            <!-- GoPay -->
+            <div class="payment-card" data-category="ewallet">
+                <div class="payment-header">
+                    <div class="payment-icon" style="background: linear-gradient(135deg, #00BFA6, #00897B);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="payment-details">
+                        <h3>GoPay</h3>
+                        <div class="payment-type">E-Wallet</div>
+                    </div>
+                </div>
+                
+                <div class="payment-number" onclick="copyToClipboard('087720254002', this)">
+                    087720254002
+                    <button class="copy-btn">
+                        <i class="far fa-copy"></i>
+                    </button>
+                    <span class="copy-success">Nomor berhasil disalin!</span>
+                </div>
+            </div>
 
-        <!-- Ganti link gambar di bawah dengan QRIS kamu -->
-        <img src="WhatsApp Image 2025-12-03 at 08.58.30_f90cfe4a.jpg" alt="QRIS Kawara Store">
+            <!-- OVO -->
+            <div class="payment-card" data-category="ewallet">
+                <div class="payment-header">
+                    <div class="payment-icon" style="background: linear-gradient(135deg, #4B2E83, #6A4C9C);">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="payment-details">
+                        <h3>OVO</h3>
+                        <div class="payment-type">E-Wallet</div>
+                    </div>
+                </div>
+                
+                <div class="payment-number" onclick="copyToClipboard('087720254002', this)">
+                    087720254002
+                    <button class="copy-btn">
+                        <i class="far fa-copy"></i>
+                    </button>
+                    <span class="copy-success">Nomor berhasil disalin!</span>
+                </div>
+            </div>
+
+            <!-- ShopeePay -->
+            <div class="payment-card" data-category="ewallet">
+                <div class="payment-header">
+                    <div class="payment-icon" style="background: linear-gradient(135deg, #FF2E63, #FF4081);">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="payment-details">
+                        <h3>ShopeePay</h3>
+                        <div class="payment-type">E-Wallet</div>
+                    </div>
+                </div>
+                
+                <div class="payment-number" onclick="copyToClipboard('782087720254002', this)">
+                    782087720254002
+                    <button class="copy-btn">
+                        <i class="far fa-copy"></i>
+                    </button>
+                    <span class="copy-success">Nomor berhasil disalin!</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Payments -->
+        <div class="payment-grid" id="bank-payments" style="margin-top: 30px;">
+            <!-- SeaBank -->
+            <div class="payment-card" data-category="bank">
+                <div class="payment-header">
+                    <div class="payment-icon" style="background: linear-gradient(135deg, #0077B6, #0096C7);">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="payment-details">
+                        <h3>SeaBank</h3>
+                        <div class="payment-type">Bank Digital</div>
+                    </div>
+                </div>
+                
+                <div class="payment-number" onclick="copyToClipboard('901537597035', this)">
+                    9015 3759 7035
+                    <button class="copy-btn">
+                        <i class="far fa-copy"></i>
+                    </button>
+                    <span class="copy-success">Nomor berhasil disalin!</span>
+                </div>
+                
+                <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-light); opacity: 0.8;">
+                    <i class="fas fa-user-circle"></i> Atas Nama: Muhammad Khaliji Raihan
+                </div>
+            </div>
+        </div>
+
+        <!-- QRIS Section -->
+        <div class="qris-section" data-category="qris">
+            <div class="qris-header">
+                <h2><i class="fas fa-qrcode"></i> QRIS (Quick Response Code Indonesian Standard)</h2>
+                <p>Scan QR code di bawah ini untuk pembayaran yang lebih cepat dan praktis</p>
+            </div>
+            
+            <div class="qris-container">
+                <div class="qris-image">
+                    <img src="WhatsApp Image 2025-12-03 at 08.58.30_f90cfe4a.jpg" alt="QRIS Kawara Store">
+                    <div class="qris-overlay">
+                        <p>QR Code Pembayaran</p>
+                        <button class="download-btn" onclick="downloadQRIS()">
+                            <i class="fas fa-download"></i> Download QR
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="qris-instructions">
+                    <h3><i class="fas fa-info-circle"></i> Cara Pembayaran QRIS:</h3>
+                    <ol>
+                        <li>Buka aplikasi e-wallet atau banking app Anda</li>
+                        <li>Pilih menu "Scan QRIS" atau "Bayar dengan QR"</li>
+                        <li>Arahkan kamera ke QR code di atas</li>
+                        <li>Masukkan nominal pembayaran sesuai pesanan</li>
+                        <li>Konfirmasi dan selesaikan pembayaran</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Important Notice -->
+        <div class="notice-box">
+            <div class="notice-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="notice-content">
+                <h3>PENTING! PERHATIKAN SEBELUM MELAKUKAN PEMBAYARAN:</h3>
+                <ul>
+                    <li>Pastikan Anda melakukan transfer ke nomor/nomor rekening yang tercantum di atas</li>
+                    <li>Setelah melakukan pembayaran, segera konfirmasi ke admin dengan menyertakan bukti transfer</li>
+                    <li>Pembayaran di luar jam 21.00 WIB akan diproses keesokan harinya</li>
+                    <li>Transaksi yang sudah dibayar tidak dapat dibatalkan</li>
+                    <li>Untuk pembayaran via QRIS, pastikan Anda memasukkan nominal yang benar</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Kawara Store. All rights reserved.</p>
+            <p>Metode pembayaran resmi dan terpercaya untuk transaksi Anda.</p>
+        </footer>
     </div>
 
-</div>
-
+    <script>
+        // Filter payment methods by category
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            const paymentCards = document.querySelectorAll('.payment-card, .qris-section');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // Update active button
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show/hide payment methods based on category
+                    paymentCards.forEach(card => {
+                        const cardCategory = card.getAttribute('data-category');
+                        
+                        if (category === 'all' || cardCategory === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Initialize all payments visible
+            paymentCards.forEach(card => {
+                card.style.display = 'block';
+            });
+        });
+        
+        // Copy to clipboard function
+        function copyToClipboard(text, element) {
+            // Create temporary input element
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            
+            // Select and copy text
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            
+            // Remove temporary element
+            document.body.removeChild(tempInput);
+            
+            // Show success message
+            const successMsg = element.querySelector('.copy-success');
+            successMsg.classList.add('show');
+            
+            // Hide success message after 2 seconds
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Download QRIS image (placeholder function)
+        function downloadQRIS() {
+            const qrImage = document.querySelector('.qris-image img');
+            const imageUrl = qrImage.src;
+            
+            // Create a temporary link element
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = 'QRIS-Kawara-Store.jpg';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show notification
+            alert('QRIS berhasil didownload!');
+        }
+        
+        // Auto-copy on click for mobile optimization
+        document.querySelectorAll('.payment-number, .method-number').forEach(element => {
+            element.addEventListener('click', function() {
+                const text = this.textContent.trim();
+                copyToClipboard(text, this);
+            });
+        });
+    </script>
 </body>
 </html>
